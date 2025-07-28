@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Setup Instructions - CRM System</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8fafc;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1f2937;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #374151;
+            margin-top: 30px;
+        }
+        .step {
+            background: #f3f4f6;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        code {
+            background: #e5e7eb;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        .code-block {
+            background: #1f2937;
+            color: #f9fafb;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📧 Email Setup Instructions for CRM System</h1>
+        
+        <div class="warning">
+            <strong>⚠️ Important:</strong> The CRM system needs email configuration to send user credentials and notifications. Currently, email sending may be failing due to missing or incorrect configuration.
+        </div>
+
+        <h2>🔧 Gmail Setup (Recommended)</h2>
+        
+        <div class="step">
+            <strong>Step 1:</strong> Enable 2-Step Verification
+            <ul>
+                <li>Go to <a href="https://myaccount.google.com/" target="_blank">Google Account Settings</a></li>
+                <li>Click on "Security" in the left sidebar</li>
+                <li>Under "Signing in to Google", enable "2-Step Verification" if not already enabled</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <strong>Step 2:</strong> Generate App Password
+            <ul>
+                <li>In the same Security section, click on "App passwords"</li>
+                <li>You may need to sign in again</li>
+                <li>Select "Mail" as the app</li>
+                <li>Select "Other (Custom name)" as the device</li>
+                <li>Enter "CRM System" as the device name</li>
+                <li>Click "Generate"</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <strong>Step 3:</strong> Copy the App Password
+            <ul>
+                <li>Google will show you a 16-character password (like: <code>abcd efgh ijkl mnop</code>)</li>
+                <li>Copy this password (remove spaces if any)</li>
+                <li><strong>Important:</strong> This is NOT your regular Gmail password!</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <strong>Step 4:</strong> Update .env File
+            <ul>
+                <li>Open the <code>backend/.env</code> file</li>
+                <li>Update the following lines:</li>
+            </ul>
+            <div class="code-block">
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your-gmail-address@gmail.com
+EMAIL_PASS=your-16-character-app-password
+            </div>
+        </div>
+
+        <div class="step">
+            <strong>Step 5:</strong> Restart the Backend Server
+            <ul>
+                <li>Stop the backend server (Ctrl+C)</li>
+                <li>Start it again: <code>python -m app.main</code></li>
+            </ul>
+        </div>
+
+        <div class="success">
+            <strong>✅ Test the Configuration:</strong>
+            <ul>
+                <li>Create a new user in the CRM system</li>
+                <li>Check the popup for email status</li>
+                <li>If successful, the user will receive their credentials via email</li>
+            </ul>
+        </div>
+
+        <h2>🔍 Troubleshooting</h2>
+        
+        <div class="step">
+            <strong>Common Issues:</strong>
+            <ul>
+                <li><strong>Authentication failed:</strong> Make sure you're using the App Password, not your regular password</li>
+                <li><strong>2-Step Verification required:</strong> Enable 2-Step Verification first</li>
+                <li><strong>App Password not available:</strong> Make sure 2-Step Verification is fully set up</li>
+                <li><strong>Connection timeout:</strong> Check your internet connection and firewall settings</li>
+                <li><strong>Email not received:</strong> Check spam folder, verify email address is correct</li>
+            </ul>
+        </div>
+
+        <h2>📋 Current Configuration Status</h2>
+        
+        <div class="step">
+            You can check your current email configuration by visiting:
+            <br><br>
+            <a href="/api/email/config/status" target="_blank">http://localhost:8000/api/email/config/status</a>
+            <br><br>
+            <em>(Note: You need to be logged in as Super Admin to access this endpoint)</em>
+        </div>
+
+        <h2>🧪 Test Email Sending</h2>
+        
+        <div class="step">
+            After configuration, you can test email sending by:
+            <ul>
+                <li>Creating a new user in the CRM system</li>
+                <li>The popup will show the email status</li>
+                <li>Green status = Email sent successfully</li>
+                <li>Red status = Email failed (check error message)</li>
+                <li>Blue status = Email queued for sending</li>
+                <li>Gray status = Email not configured</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <strong>🔒 Security Note:</strong> Never share your App Password or commit it to version control. The .env file should be kept private and not shared publicly.
+        </div>
+
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
+        
+        <p style="text-align: center; color: #6b7280; font-size: 14px;">
+            CRM System Email Configuration Guide<br>
+            <a href="http://localhost:3000" style="color: #3b82f6;">← Back to CRM System</a>
+        </p>
+    </div>
+</body>
+</html>
