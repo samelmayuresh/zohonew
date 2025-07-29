@@ -17,7 +17,7 @@ load_dotenv(override=True)
 
 EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
-EMAIL_USER = os.getenv("EMAIL_USER", "samelmayuresh40@gmail.com")
+EMAIL_USER = os.getenv("EMAIL_USER", "your-actual-email@gmail.com")
 EMAIL_PASS = os.getenv("EMAIL_PASS", "")
 
 # Configure logging
@@ -60,7 +60,7 @@ class EmailService:
         
         self.host = os.getenv("EMAIL_HOST", "smtp.gmail.com")
         self.port = int(os.getenv("EMAIL_PORT", "587"))
-        self.username = os.getenv("EMAIL_USER", "samelmayuresh40@gmail.com")
+        self.username = os.getenv("EMAIL_USER", "your-actual-email@gmail.com")
         self.password = os.getenv("EMAIL_PASS", "").strip()
         
         # Debug logging

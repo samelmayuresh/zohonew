@@ -8,8 +8,28 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:Minesh@2007@db.lxfoxkdnsibznmyszsvz.supabase.co:5432/postgres")
+
+# Handle SSL mode and convert to async URL
+ssl_mode = None
+if DATABASE_URL and "?sslmode=" in DATABASE_URL:
+    DATABASE_URL, ssl_params = DATABASE_URL.split("?", 1)
+    if "sslmode=" in ssl_params:
+        ssl_mode = ssl_params.split("sslmode=")[1].split("&")[0]
+
 if DATABASE_URL and DATABASE_URL.startswith("postgresql://"):
     DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+
+# Prepare connection arguments
+connect_args = {
+    "server_settings": {
+        "application_name": "CRM_API",
+    },
+    "command_timeout": 60,
+}
+
+# Add SSL configuration if present
+if ssl_mode:
+    connect_args["ssl"] = ssl_mode
 
 # Create engine with optimized connection pooling
 engine = create_async_engine(
@@ -20,12 +40,7 @@ engine = create_async_engine(
     pool_size=20,  # Number of connections to maintain in pool
     max_overflow=30,  # Additional connections beyond pool_size
     pool_timeout=30,  # Timeout for getting connection from pool
-    connect_args={
-        "server_settings": {
-            "application_name": "CRM_API",
-        },
-        "command_timeout": 60,
-    }
+    connect_args=connect_args
 )
 
 AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)

@@ -1,7 +1,8 @@
-from pydantic import BaseModel, EmailStr
-from typing import Optional
+from pydantic import BaseModel, EmailStr, field_serializer
+from typing import Optional, Union
 from datetime import datetime
 from enum import Enum
+from uuid import UUID
 
 class UserRole(str, Enum):
     SUPER_ADMIN = "super_admin"
@@ -17,7 +18,7 @@ class UserCreate(BaseModel):
     role: UserRole
 
 class UserResponse(BaseModel):
-    id: str
+    id: Union[str, UUID]
     email: str
     full_name: str
     role: str
@@ -25,8 +26,13 @@ class UserResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+    @field_serializer('id')
+    def serialize_id(self, value):
+        return str(value) if isinstance(value, UUID) else value
+
     class Config:
         from_attributes = True
+        json_encoders = {UUID: str}
 
 class UserCredentials(BaseModel):
     username: str

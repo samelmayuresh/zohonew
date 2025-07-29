@@ -19,8 +19,8 @@ class User(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     created_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
 
-    # Relationships
-    created_leads = relationship("Lead", foreign_keys="Lead.created_by", back_populates="creator")
-    assigned_leads = relationship("Lead", foreign_keys="Lead.assigned_to", back_populates="assignee")
-    created_tasks = relationship("Task", foreign_keys="Task.assigned_by", back_populates="creator")
-    assigned_tasks = relationship("Task", foreign_keys="Task.assigned_to", back_populates="assignee")
+    # Relationships - using string references to avoid circular imports
+    created_leads = relationship("Lead", foreign_keys="Lead.created_by", back_populates="creator", lazy="select")
+    assigned_leads = relationship("Lead", foreign_keys="Lead.assigned_to", back_populates="assignee", lazy="select")
+    created_tasks = relationship("Task", foreign_keys="Task.assigned_by", back_populates="creator", lazy="select")
+    assigned_tasks = relationship("Task", foreign_keys="Task.assigned_to", back_populates="assignee", lazy="select")
